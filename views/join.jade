@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  .container
+    .header.clearfix
+      nav
+        ul.nav.nav-pills.pull-right
+          li
+            a(href="/login") 登录
+          li.active
+            a(href="#") 注册
+      h3.text-muted
+
+    .body
+      form.form-horizontal.col-sm-10.col-sm-offset-2(role='form', action='/join', method='post')
+        h2.form-signin-heading 注册
+        .form-group(class=username ? 'has-error' : '')
+          label.col-sm-2.control-label 用户名
+          .col-sm-6
+            input.form-control(type='text', name='username', required='', autofocus='')
+        .form-group(class=pwd1 ? 'has-error' : '')
+          label.col-sm-2.control-label 密码
+          .col-sm-6
+            input.form-control(type='password', name='pwd1', required='')
+        .form-group(class=pwd2 ? 'has-error' : '')
+          label.col-sm-2.control-label 重复密码
+          .col-sm-6
+            input.form-control(type='password', name='pwd2', required='')
+        .form-group
+          .col-sm-offset-2
+            .col-sm-4
+              button.btn.btn-sm.btn-primary.btn-block(type='submit') 注册
+  include footer.jade

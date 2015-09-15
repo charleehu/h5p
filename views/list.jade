@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  .container
+    .header.clearfix
+      nav 
+        p.navbar-text.navbar-right Signed in as 
+          a.navbar-link(href='/logout') #{username}
+        p.navbar-text.navbar-right
+          a.navbar-link(href='/console/app')
+            span.glyphicon.glyphicon-plus
+      h3.text-muted
+
+    .body
+      table.table
+        thead
+          tr
+            th #
+            th 应用名
+            th 访问地址
+            th 操作
+        tbody
+          for app in apps
+            tr
+              th= app._id
+              td= app.appName
+              td 
+                a(href='/games/#{app._id}' target='_blank') Link
+              td
+                a(href='/console/app/delete?id=#{app._id}') D
+  include footer.jade

@@ -1,0 +1,38 @@
+extends layout
+
+block content
+  .container
+    .header.clearfix
+      nav
+        ul.nav.nav-pills.pull-right
+          li.active
+            a(href="#") 登录
+          li
+            a(href="/join") 注册
+      h3.text-muted
+
+    .body
+      form.form-horizontal.col-sm-10.col-sm-offset-2(role='form', action='/login', method='post')
+        h2.form-signin-heading 登录
+        .form-group(class=username ? 'has-error' : '')
+          label.col-sm-2.control-label 用户名
+          .col-sm-6
+            input.form-control(type='text', name='username', required='', autofocus='')
+        .form-group(class=pwd ? 'has-error' : '')
+          label.col-sm-2.control-label 密码
+          .col-sm-6
+            input.form-control(type='password', name='pwd', required='')
+        .form-group(class=code ? 'has-error' : '')
+          label.col-sm-2.control-label 验证码
+          .col-sm-6
+            input.form-control(type='text', name='code', required='')
+          .col-sm-2
+            img#codeImg(src='/checkcode')
+        .form-group
+          .col-sm-offset-2
+            .col-sm-4
+              button.btn.btn-sm.btn-primary.btn-block(type='submit') 登录
+  include footer.jade
+
+  script(src='http://code.jquery.com/jquery-latest.min.js')
+  script(src='/javascripts/login.js')
