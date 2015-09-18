@@ -25,7 +25,10 @@ block content
               th= app._id
               td= app.appName
               td 
-                a(href='/games/#{app._id}' target='_blank') Link
+                a(href='/games/#{app._id}' target='_blank')
+                  span.glyphicon.glyphicon-link
+                a(href='/games/#{app._id}' target='_blank')
+                  span.glyphicon.glyphicon-qrcode
               td
                 a(href='/console/app/delete?id=#{app._id}') D
   include footer.jade

@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var captchapng = require('captchapng');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var fs = require('fs');
+var AdmZip = require('adm-zip');
 
 var Datastore = require('nedb')
   , db = {};
@@ -75,7 +77,7 @@ router.post('/join', urlencodedParser, function(req, res, next) {
         res.render('join', { title: '注册', pwd1: true, pwd2: true });
       }
       else {
-        var timestamp = new Date().getTime()
+        var timestamp = Date.now();
         var pwdHash = crypto.createHmac('sha1', timestamp + '').update(pwd1).digest('hex')
 
         db.users.insert({username: username, pwd: pwdHash, timestamp: timestamp}, function(err){
@@ -90,7 +92,6 @@ router.get('/console/list', function(req, res, next) {
   if (req.session.login == true) {
     var username = req.session.username;
     db.apps.find({username: username}, function(err, docs) {
-        console.log(docs);
       res.render('list', { title: '应用列表', username: req.session.username, apps: docs });
     });
   }
@@ -116,7 +117,6 @@ router.get('/console/app/delete', function(req, res, next) {
   if (req.session.login == true) {
     var username = req.session.username;
     var id = req.query.id;
-    console.log(id);
     
     db.apps.remove({username: username, _id: id}, function(err, docs) {
       res.redirect('/console/list');
@@ -128,12 +128,30 @@ router.get('/console/app/delete', function(req, res, next) {
 });
 
 router.post('/console/app', function(req, res, next) {
+  console.log('fadffsfasfasfasdfsdf')
   if (req.session.login == true) {
-    var username = req.session.username;
-    var appName = req.body.appName;
-    db.apps.insert({username: username, appName: appName}, function(err, docs) {
-      res.redirect('/console/list');
+    console.log(req.file)
+    var zip = new AdmZip(req.file.path);
+    var flag = false;
+    zip.getEntries().forEach(function(entry) {
+      if (entry.entryName == 'index.html' || entry.entryName == 'index.htm') {
+        flag = true;
+      }
     });
+
+    if (flag) {
+      var username = req.session.username;
+      var appName = req.body.appName;
+      db.apps.insert({username: username, appName: appName}, function(err, docs) {
+        console.log(docs);
+
+        zip.extractAllTo('public/games/' + docs._id, true);
+        res.redirect('/console/list');
+      });
+    }
+    else {
+      res.render('error', {message: 'zip包根目录中没有index.html文件，请检查', error: {status: 400}});
+    }
   }
   else {
     res.redirect('/login');

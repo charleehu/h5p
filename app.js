@@ -1,5 +1,6 @@
 var express = require('express');
-var upload = require('jquery-file-upload-middleware');
+var multer = require('multer');
+//var upload = require('jquery-file-upload-middleware');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -11,16 +12,18 @@ var routes = require('./routes/index');
 
 var app = express();
 
-upload.configure({
-        uploadDir: __dirname + '/public',
-        uploadUrl: '/uploads',
-        imageVersions: {
-            thumbnail: {
-                width: 80,
-                height: 80
-            }
-        }
-    });
+require('string.prototype.endswith');
+
+//upload.configure({
+//        uploadDir: __dirname + '/public',
+//        uploadUrl: '/uploads',
+//        imageVersions: {
+//            thumbnail: {
+//                width: 80,
+//                height: 80
+//            }
+//        }
+//    });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,14 +36,32 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true
 }));
 
+app.use(multer({
+  storage: multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, 'tmp')
+    },
+    filename: function(req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname)
+    }
+  }),
+  limits: {
+    fileSize: 1024 * 1024 * 10 //10M
+  },
+  fileFilter: function(req, file, cb) {
+    cb(new Error('上传文件必须为zip'), file.originalname.endsWith('zip'));
+  }
+}).single('apptar'));
+
 app.use('/', routes);
-app.use('/upload', upload.fileHandler());
+//app.use('/upload', upload.fileHandler());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

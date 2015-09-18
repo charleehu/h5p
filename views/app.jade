@@ -4,8 +4,6 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css', rel='stylesheet')
-    link(href='//blueimp.github.io/jQuery-File-Upload/css/jquery.fileupload.css', rel='stylesheet')
-    link(href='//blueimp.github.io/jQuery-File-Upload/css/jquery.fileupload-ui.css', rel='stylesheet')
   body
     .container
       .header.clearfix
@@ -16,16 +14,16 @@ html
         h3.text-muted
 
       .body
-        form.form-horizontal.col-sm-10.col-sm-offset-2(role='form', action='/console/app', method='post')
+        form.form-horizontal.col-sm-10.col-sm-offset-2(role='form', action='/console/app', method='post', enctype='multipart/form-data')
           h2.form-signin-heading 创建
           .form-group
             label.col-sm-2.control-label 应用名
             .col-sm-6
               input.form-control(type='text', name='appName', required='', autofocus='')
           .form-group
-            label.col-sm-2.control-label 包
+            label.col-sm-2.control-label 包(<10M)
             .col-sm-6
-              input#fileupload(type='file', name='files[]', data-url="/upload" multiple)
+              input#fileupload(type='file', name='apptar', required='')
           .form-group
             .col-sm-offset-2
               .col-sm-4
@@ -33,15 +31,4 @@ html
     include footer.jade
   
   script(src='http://code.jquery.com/jquery-latest.min.js')
-  script(src="//blueimp.github.io/jQuery-File-Upload/js/vendor/jquery.ui.widget.js")
-  script(src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js")
-  script(src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js")
-  script(src="//blueimp.github.io/jQuery-File-Upload/js/jquery.iframe-transport.js")
-  script(src="//blueimp.github.io/jQuery-File-Upload/js/jquery.fileupload.js")
-  script(src="//blueimp.github.io/jQuery-File-Upload/js/jquery.fileupload-process.js")
-  script(src="//blueimp.github.io/jQuery-File-Upload/js/jquery.fileupload-image.js")
-  script(src="//blueimp.github.io/jQuery-File-Upload/js/jquery.fileupload-audio.js")
-  script(src="//blueimp.github.io/jQuery-File-Upload/js/jquery.fileupload-video.js")
-  script(src="//blueimp.github.io/jQuery-File-Upload/js/jquery.fileupload-validate.js")
-  script(src="//blueimp.github.io/jQuery-File-Upload/js/jquery.fileupload-ui.js")
   script(src="/javascripts/file_upload.js")
